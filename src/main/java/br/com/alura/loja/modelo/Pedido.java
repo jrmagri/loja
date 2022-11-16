@@ -18,12 +18,19 @@ public class Pedido {
     private String nome;
     private String descricao;
     @Column(name = "valor_total")
-    private BigDecimal valorTotal;
+    private BigDecimal valorTotal = BigDecimal.ZERO;
     private LocalDate data = LocalDate.now();
 
     //todo pedido pertence a um cliente, um cliente pode estar vinculado a mais de um pedido
-    @ManyToOne
+    //todo relacionamento ToOne colocar LAZY
+    @ManyToOne(fetch = FetchType.LAZY)
     private Cliente cliente;
+
+    public List<ItemPedido> getItens() {
+        return itens;
+    }
+
+    //ToMany já é Lazy
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itens = new ArrayList<>();
 
@@ -39,6 +46,7 @@ public class Pedido {
     public void adicionarItem(ItemPedido item){
         item.setPedido(this);
         this.itens.add(item);
+        this.valorTotal = this.valorTotal.add(item.getValor());
     }
     public Long getId() {
         return id;

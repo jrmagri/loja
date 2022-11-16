@@ -14,9 +14,9 @@ public class ItemPedido {
 
     private int quantidade;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Pedido pedido;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Produto produto;
 
     public ItemPedido(int quantidade, Pedido pedido, Produto produto) {
@@ -32,5 +32,9 @@ public class ItemPedido {
 
     public void setPedido(Pedido pedido) {
         this.pedido = pedido;
+    }
+
+    public BigDecimal getValor(){
+        return precoUnitario.multiply(new BigDecimal(quantidade));
     }
 }
